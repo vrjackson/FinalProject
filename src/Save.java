@@ -1,59 +1,68 @@
-import java.io.PrintWriter;
-import java.util.Scanner;
+/**
+ * This class handles the saving/loading operations
+ * @author Ram R.
+ * @author Tori J.
+ * @author Emily H.
+ * @version 1.0
+ */
+import java.io.*;
 
 public class Save {
-    private String username;
-    private int xCoord;
-    private int yCoord;
-    private int battlesWon;
-    private int battlesLost;
-    private boolean hasSaved;
 
-    public Save(String username, Scanner in) {
-        this.username = username;
-        xCoord = Integer.parseInt(in.nextLine());
-        yCoord = Integer.parseInt(in.nextLine());
-        battlesWon = Integer.parseInt(in.nextLine());
-        battlesLost = Integer.parseInt(in.nextLine());
-        hasSaved = false;
+    private static final String saveFile = "saveFile.txt";
+
+    /**
+     * this method overwrites the existing save file with data passed in
+     * @param userName
+     * @param x
+     * @param y
+     * @param battlesWon
+     * @param battlesLost
+     */
+    public static void saveGame(String userName, int x, int y, int battlesWon, int battlesLost) {
+        try (PrintWriter saver = new PrintWriter(new FileWriter(saveFile))) {
+            saver.println(userName);
+            saver.println(x);
+            saver.println(y);
+            saver.println(battlesWon);
+            saver.println(battlesLost);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public Save(String username) {
-        this.username = username;
-        xCoord = 100;
-        yCoord = 100;
-        battlesWon = 0;
-        battlesLost = 0;
-        hasSaved = false;
+    /**
+     * method used to check if a save file exists
+     * @return true/false
+     */
+    public static boolean saveFileExists() {
+        File file = new File(saveFile);
+        return file.exists();
     }
 
-    public String getUsername() {
-        return username;
+    /**
+     * this method reads in the data from the save file to return it as a String array where needed
+     * @return String array containing previously saved data
+     */
+    public static String[] loadGame() {
+        String[] savedData = new String[5];
+        try (BufferedReader reader = new BufferedReader(new FileReader(saveFile))) {
+            for (int i = 0; i < 5; i++) {
+                savedData[i] = reader.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return savedData;
     }
 
-    public int getXCoord() {
-        return xCoord;
-    }
-
-    public int getYCoord() {
-        return yCoord;
-    }
-
-    public int getBattlesWon() {
-        return battlesWon;
-    }
-
-    public int getBattlesLost() {
-        return battlesLost;
-    }
-
-    public void update(PrintWriter out) {
-        // Username is not here, I'm under the assumption that won't have to be changed
-        // Assuming that there's something to scan the file for the certain username
-        out.println(xCoord);
-        out.println(yCoord);
-        out.println(battlesWon);
-        out.println(battlesLost);
-        out.println(hasSaved);
+    /**
+     * this method deletes the previously saved file
+     */
+    public static void deleteSave() {
+        File file = new File(saveFile);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 }

@@ -5,7 +5,6 @@
  * @author Emily H.
  * @version 1.0
  */
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -20,38 +19,57 @@ public class BattleDisplay extends JPanel {
      * @param gamePanel a reference to GameDisplay to resume the main world after a scuffle.
      */
     public BattleDisplay(CardLayout cardLayout, JPanel parent, GameDisplay gamePanel) {
-        setLayout(new BorderLayout());
 
-        JLabel label = new JLabel("Trouble has found you!", SwingConstants.CENTER);
-        label.setFont(new Font("Comic Sans", Font.BOLD, 24));
-        add(label, BorderLayout.NORTH);
+        setLayout(null);
 
-        JPanel battleOptions = new JPanel(new FlowLayout());
+        //gets and formats the background; overwrites paintComponent to render the gif scaled to frame, otherwise it'll look ugly...
+        ImageIcon battleBackGround = new ImageIcon("BattleBackGround.gif");
+        JLabel battleBG = new JLabel(battleBackGround) {
+            protected void paintComponent(Graphics graphics) {
+                graphics.drawImage(battleBackGround.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        battleBG.setBounds(0, 0, 800, 600);
+        add(battleBG);
 
+        //formats the message that appears during a battle
+        JLabel message = new JLabel("Trouble has found you!", SwingConstants.CENTER);
+        message.setFont(new Font("Comic Sans", Font.BOLD, 24));
+        message.setForeground(Color.WHITE);
+        message.setBounds(200, 75, 400, 40);
+        add(message);
+
+        //formats the enemy's sprite
         ImageIcon enemyIcon = new ImageIcon("enemySprite.png");
         JLabel enemyLabel = new JLabel(enemyIcon);
-        enemyLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        enemyLabel.setVerticalAlignment(SwingConstants.CENTER);
-        add(enemyLabel, BorderLayout.CENTER);
+        enemyLabel.setBounds(245,150, enemyIcon.getIconWidth(), enemyIcon.getIconHeight());
+        add(enemyLabel);
 
         //when fight is selected, there is a 50/50 chance of win/loss
         JButton fight = new JButton("Hit!");
+        fight.setBounds( 250, 480, 100, 30);
         fight.addActionListener( e -> {//using lambda syntax cus it feels cool
             boolean win = Math.random() < 0.5;
             //the line below is conditional and determined by if "win"(above) is true/false
-            JOptionPane.showMessageDialog(this, win ? "Victory!" : "Bro thought he had aura...");
+            JOptionPane.showMessageDialog(this, win ? "YOU WON\nVictory Royale!" : "Ya lost...\nBro thought he had aura");
+            if (win == true) {
+                gamePanel.ifBattleWon();
+            } else {
+                gamePanel.ifBattleLost();
+            }
             gamePanel.battleOver();
         });
 
         //when run is selected, the player will always escape from a battle
         JButton run = new JButton("Run!");
+        run.setBounds( 450, 480, 100, 30);
         run.addActionListener( e -> {//using lambda syntax cus it feels cool
-            JOptionPane.showMessageDialog(this, "You escaped safely");
+            JOptionPane.showMessageDialog(this, "You escaped safely!\n..this time..");
             gamePanel.battleOver();
         });
 
-        battleOptions.add(fight);
-        battleOptions.add(run);
-        add(battleOptions, BorderLayout.SOUTH);
+        add(fight);
+        add(run);
+        setComponentZOrder(battleBG, getComponentCount() -1);//background is moved to the back so buttons/enemies are visible
     }
 }

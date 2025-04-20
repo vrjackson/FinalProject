@@ -5,17 +5,20 @@
  * @author Emily H.
  * @version 1.0
  */
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class GameDisplay extends JPanel{
 
+    private String saveFile;
+    private String userName;
+    private int battlesWon;
+    private int battlesLost;
     private Image backgroundImage, characterSprite;
     private ImageIcon saveIcon;
     private int xCoord = 400, yCoord = 300;
-    private int characterWidth = 25, characterHeight = 25;
+    private final int characterWidth = 25, characterHeight = 25;
     private final int frameWidth = 800, frameHeight = 600;
     private final int moveSpeed = 10;
     private int bgWidth, bgHeight;
@@ -23,6 +26,28 @@ public class GameDisplay extends JPanel{
     private CardLayout cardLayout;
     private JPanel parent;
     private Timer battleTimer;
+    private JLabel stats;
+
+
+    /**
+     * Constructor that loads in saved data/new game with parameters
+     * @param cardLayout
+     * @param parent
+     * @param userName
+     * @param xCoord
+     * @param yCoord
+     * @param battlesWon
+     * @param battlesLost
+     */
+    public GameDisplay(CardLayout cardLayout, JPanel parent, String userName, int xCoord, int yCoord, int battlesWon, int battlesLost){
+        this(cardLayout, parent);
+        this.userName = userName;
+        this.xCoord = xCoord;
+        this.yCoord = yCoord;
+        this.battlesWon = battlesWon;
+        this.battlesLost = battlesLost;
+        updateStats();
+    }
 
     /**
      * This default constructor is used to build the window the game operates in. It sets the background,
@@ -32,25 +57,39 @@ public class GameDisplay extends JPanel{
 
         this.cardLayout = cardLayout;
         this.parent = parent;
+
         backgroundImage = new ImageIcon("Project_Background_1.png").getImage();
         characterSprite = new ImageIcon("characterSprite.png").getImage();
         saveIcon = new ImageIcon("save.png");
+
         Image scaledImage = saveIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
-
         bgWidth = backgroundImage.getWidth(null);
         bgHeight = backgroundImage.getHeight(null);
+
+        //sets focus in window to register key presses for movement
         setFocusable(true);
         requestFocusInWindow();
 
+        //formatting the save button
         saveButton = new JButton(scaledIcon);
-        saveButton.setBounds(10, 10, 100, 100);
+        saveButton.setBounds(700, 0, 100, 100);
         saveButton.setBorderPainted(false);
         saveButton.setContentAreaFilled(false);
         saveButton.setFocusPainted(false);
         saveButton.addActionListener(e -> saveGame());
         this.add(saveButton);
 
+        //formating the stats/HUD
+        stats = new JLabel();
+        stats.setForeground(Color.WHITE);
+        stats.setFont(new Font("Comic Sans", Font.BOLD, 14));
+        setLayout(null);
+        stats.setBounds(15, 10, 300, 20);
+        this.add(stats);
+        updateStats();
+
+        //movement keys and repaints the screen if after a key press
         addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
@@ -70,14 +109,13 @@ public class GameDisplay extends JPanel{
                 repaint();
             }
         });
-        startBattleTimer();
     }
 
     /**
-     * Overrides the paintComponent method to handle the scrolling background and to
-     * fix the character sprite to the center of the frame. It also calculates the camera view based on the character's
-     * x and y coordinates, and ensures the camera doesn't exceed the background bounds
-     * @param graphics the <code>Graphics</code> object to protect; used for drawing the background and character sprite
+     * Overrides the paintComponent method to handle the scrolling background and to fix the character sprite to the
+     * center of the frame. It also calculates the camera view based on the character's x and y coordinates, and
+     * ensures the camera doesn't exceed the background/frame bounds
+     * @param graphics the <code>Graphics</code> object to protect; used for rendering the background and character sprite
      */
     @Override
     protected void paintComponent(Graphics graphics) {
@@ -103,6 +141,7 @@ public class GameDisplay extends JPanel{
      * then ensures this(GameDisplay object) regains focus after closing the popup
      */
     public void saveGame(){
+        Save.saveGame(userName, xCoord, yCoord, battlesWon, battlesLost);
         JOptionPane.showMessageDialog(this, "Game has been saved.");
         this.requestFocusInWindow();
     }
@@ -110,7 +149,7 @@ public class GameDisplay extends JPanel{
     /**
      * this method has a 50/50 change to initiate a battle every 10 seconds
      */
-    private void startBattleTimer() {
+    public void startBattleTimer() {
         battleTimer = new Timer(10000, e -> {//10 seconds, then lambda as action listener
             if (Math.random() < 0.5) {//RNG a double between 0.0 to 1.0/test if greater than 0.5
                 cardLayout.show(parent, "battle");//switches to battle page
@@ -120,11 +159,34 @@ public class GameDisplay extends JPanel{
     }
 
     /**
+     * this method increments the battlesWon variable if the user won a fight
+     */
+    public void ifBattleWon() {
+        this.battlesWon++;
+        updateStats();
+    }
+
+    /**
+     * this method increments the battlesLost variable if the user lost a fight
+     */
+    public void ifBattleLost() {
+        this.battlesLost++;
+        updateStats();
+    }
+
+    /**
      * this method switches the screen/page back to the main game
      */
     public void battleOver() {
         cardLayout.show(parent, "world");
         this.requestFocusInWindow();
+    }
+
+    /**
+     * this method formats the HUD with the players info to be displayed live(userBame/wins/losses)
+     */
+    public void updateStats() {
+        stats.setText(userName + " | Wins: " + battlesWon + " | Losses: " + battlesLost);
     }
 
     /**
@@ -142,6 +204,5 @@ public class GameDisplay extends JPanel{
     public int getFrameHeight() {
         return this.frameHeight;
     }
-
 }
 
