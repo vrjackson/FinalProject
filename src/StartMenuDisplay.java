@@ -9,6 +9,9 @@
 import javax.swing.*;
 import java.awt.*;
 
+import static javax.swing.JOptionPane.CANCEL_OPTION;
+import static javax.swing.JOptionPane.QUESTION_MESSAGE;
+
 public class StartMenuDisplay extends JPanel {
 
     private Image backGround;
@@ -74,23 +77,28 @@ public class StartMenuDisplay extends JPanel {
      * @param frame
      */
     private void startNewGame(CardLayout cardLayout, JPanel cards, JFrame frame) {
-        String userName = JOptionPane.showInputDialog(this, "What do ya call yerself?!");
+        JOptionPane gameSelect = new JOptionPane();
+        String userName = gameSelect.showInputDialog(this, "What do ya call yerself?!", "New Game", QUESTION_MESSAGE);
 
-        //default data that overwrites previously saved data
-        int xCoord = 400, yCoord = 300, battlesWon = 0, battlesLost = 0;
-        Save.saveGame(userName, xCoord, yCoord, battlesWon, battlesLost);
+        if (userName == null) { // If the user selects cancel, the select screen will close
+            gameSelect.setVisible(false);
+        } else { // The new game will start when OK is pressed
+            //default data that overwrites previously saved data
+            int xCoord = 400, yCoord = 300, battlesWon = 0, battlesLost = 0;
+            Save.saveGame(userName, xCoord, yCoord, battlesWon, battlesLost);
 
-        //data passed into constructors accordingly
-        GameDisplay gamePanel = new GameDisplay(cardLayout, cards, userName, xCoord, yCoord, battlesWon, battlesLost);
-        BattleDisplay battlePanel = new BattleDisplay(cardLayout, cards, gamePanel);
+            //data passed into constructors accordingly
+            GameDisplay gamePanel = new GameDisplay(cardLayout, cards, userName, xCoord, yCoord, battlesWon, battlesLost);
+            BattleDisplay battlePanel = new BattleDisplay(cardLayout, cards, gamePanel);
 
-        cards.add(gamePanel, "world");
-        cards.add(battlePanel, "battle");
-        cardLayout.show(cards, "world");
-        frame.setContentPane(cards);
-        frame.revalidate();
-        gamePanel.requestFocusInWindow();
-        gamePanel.startBattleTimer();
+            cards.add(gamePanel, "world");
+            cards.add(battlePanel, "battle");
+            cardLayout.show(cards, "world");
+            frame.setContentPane(cards);
+            frame.revalidate();
+            gamePanel.requestFocusInWindow();
+            gamePanel.startBattleTimer();
+        }
     }
 
     /**
