@@ -9,7 +9,6 @@
 import javax.swing.*;
 import java.awt.*;
 
-import static javax.swing.JOptionPane.CANCEL_OPTION;
 import static javax.swing.JOptionPane.QUESTION_MESSAGE;
 
 public class StartMenuDisplay extends JPanel {
