@@ -29,13 +29,13 @@ public class GameDisplay extends JPanel{
 
     /**
      * Constructor that loads in saved data/new game with parameters
-     * @param cardLayout
-     * @param parent
-     * @param userName
-     * @param xCoord
-     * @param yCoord
-     * @param battlesWon
-     * @param battlesLost
+     * @param cardLayout the CardLayout that manages screen switching
+     * @param parent holds the pages/screens(main world/battle)
+     * @param userName name chosen by user
+     * @param xCoord for character position in window
+     * @param yCoord for character position in window
+     * @param battlesWon stores number of battles won
+     * @param battlesLost stores number of battles lost
      */
     public GameDisplay(CardLayout cardLayout, JPanel parent, String userName, int xCoord, int yCoord, int battlesWon, int battlesLost){
         this(cardLayout, parent);
@@ -75,7 +75,7 @@ public class GameDisplay extends JPanel{
         saveButton.setBorderPainted(false);
         saveButton.setContentAreaFilled(false);
         saveButton.setFocusPainted(false);
-        saveButton.addActionListener(e -> saveGame());
+        saveButton.addActionListener(_ -> saveGame());
         this.add(saveButton);
 
         //formating the stats/HUD
@@ -150,7 +150,7 @@ public class GameDisplay extends JPanel{
      * this method has a 50/50 change to initiate a battle every 10 seconds
      */
     public void startBattleTimer() {
-        battleTimer = new Timer(10000, e -> {//10 seconds, then lambda as action listener
+        battleTimer = new Timer(10000, _ -> {//10 seconds, then lambda as action listener
             if (Math.random() < 0.5) {//RNG a double between 0.0 to 1.0/test if greater than 0.5
                 cardLayout.show(parent, "battle");//switches to battle page
             }

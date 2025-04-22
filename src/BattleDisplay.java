@@ -25,6 +25,7 @@ public class BattleDisplay extends JPanel {
         //gets and formats the background; overwrites paintComponent to render the gif scaled to frame, otherwise it'll look ugly...
         ImageIcon battleBackGround = new ImageIcon("BattleBackGround.gif");
         JLabel battleBG = new JLabel(battleBackGround) {
+            @Override
             protected void paintComponent(Graphics graphics) {
                 graphics.drawImage(battleBackGround.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
@@ -48,11 +49,11 @@ public class BattleDisplay extends JPanel {
         //when fight is selected, there is a 50/50 chance of win/loss
         JButton fight = new JButton("Hit!");
         fight.setBounds( 250, 480, 100, 30);
-        fight.addActionListener( e -> {//using lambda syntax cus it feels cool
+        fight.addActionListener(_ -> {//using lambda syntax cus it feels cool
             boolean win = Math.random() < 0.5;
             //the line below is conditional and determined by if "win"(above) is true/false
             JOptionPane.showMessageDialog(this, win ? "YOU WON\nVictory Royale!" : "Ya lost...\nBro thought he had aura");
-            if (win == true) {
+            if (win) {
                 gamePanel.ifBattleWon();
             } else {
                 gamePanel.ifBattleLost();
@@ -63,7 +64,7 @@ public class BattleDisplay extends JPanel {
         //when run is selected, the player will always escape from a battle
         JButton run = new JButton("Run!");
         run.setBounds( 450, 480, 100, 30);
-        run.addActionListener( e -> {//using lambda syntax cus it feels cool
+        run.addActionListener(_ -> {//using lambda syntax cus it feels cool
             JOptionPane.showMessageDialog(this, "You escaped safely!\n..this time..");
             gamePanel.battleOver();
         });

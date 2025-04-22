@@ -13,11 +13,11 @@ public class Save {
 
     /**
      * this method overwrites the existing save file with data passed in
-     * @param userName
-     * @param x
-     * @param y
-     * @param battlesWon
-     * @param battlesLost
+     * @param userName name chosen by user
+     * @param x for character position in window
+     * @param y for character position in window
+     * @param battlesWon stores number of battles won
+     * @param battlesLost stores number of battles lost
      */
     public static void saveGame(String userName, int x, int y, int battlesWon, int battlesLost) {
         try (PrintWriter saver = new PrintWriter(new FileWriter(saveFile))) {
@@ -54,12 +54,5 @@ public class Save {
             e.printStackTrace();
         }
         return savedData;
-    }
-
-    /**
-     * this method deletes the previously saved file
-     */
-    public static void deleteSave() {
-        File file = new File(saveFile);
     }
 }

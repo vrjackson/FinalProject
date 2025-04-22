@@ -19,9 +19,9 @@ public class StartMenuDisplay extends JPanel {
      * constructor for the startup menu. checks if a save file already exists. If it doesn't the only option will be to
      * start a new game, if it does exist the player can choose to either load their save or start a new game(erasing
      * their data)
-     * @param cardLayout
-     * @param cards
-     * @param frame
+     * @param cardLayout the CardLayout that manages screen switching
+     * @param cards holds the pages/screens(main world/battle)
+     * @param frame for the window that everything occurs on
      */
     public StartMenuDisplay(CardLayout cardLayout, JPanel cards, JFrame frame) {
 
@@ -36,7 +36,7 @@ public class StartMenuDisplay extends JPanel {
             JButton newGame = new JButton("Start New Save");
 
             //loads data from the Save class method "loadData()"
-            loadGame.addActionListener(e -> {
+            loadGame.addActionListener(_ -> {
                 String[] savedData = Save.loadGame();
                 String userName = savedData[0];
                 int xCoord = Integer.parseInt(savedData[1]);
@@ -56,13 +56,13 @@ public class StartMenuDisplay extends JPanel {
                 gamePanel.startBattleTimer();
             });
 
-            newGame.addActionListener(e -> startNewGame(cardLayout, cards, frame));
+            newGame.addActionListener(_ -> startNewGame(cardLayout, cards, frame));
 
             buttonPanel.add(loadGame);
             buttonPanel.add(newGame);
         } else { //logic for when there isn't a previously saved file, to start a new game is the only option
             JButton newGame = new JButton("New Game");
-            newGame.addActionListener(e -> startNewGame(cardLayout, cards, frame));
+            newGame.addActionListener(_ -> startNewGame(cardLayout, cards, frame));
             buttonPanel.add(newGame);
         }
         add(buttonPanel, BorderLayout.SOUTH);
@@ -71,9 +71,9 @@ public class StartMenuDisplay extends JPanel {
     /**
      * this method gets called to action when the button "Start New Game" is selected. it overwrites the existing data
      * with the players new username, and predetermined variables. Then proceeds to gameplay/world
-     * @param cardLayout
-     * @param cards
-     * @param frame
+     * @param cardLayout the CardLayout that manages screen switching
+     * @param cards holds the pages/screens(main world/battle)
+     * @param frame for the window that everything occurs on
      */
     private void startNewGame(CardLayout cardLayout, JPanel cards, JFrame frame) {
         JOptionPane gameSelect = new JOptionPane();
@@ -82,7 +82,7 @@ public class StartMenuDisplay extends JPanel {
         if (userName == null) { // If the user selects cancel, the select screen will close
             gameSelect.setVisible(false);
         } else { // The new game will start when OK is pressed
-            //default data that overwrites previously saved data
+            // default data that overwrites previously saved data
             int xCoord = 400, yCoord = 300, battlesWon = 0, battlesLost = 0;
             Save.saveGame(userName, xCoord, yCoord, battlesWon, battlesLost);
 
