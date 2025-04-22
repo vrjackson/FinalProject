@@ -25,6 +25,7 @@ public class BattleDisplay extends JPanel {
         //gets and formats the background; overwrites paintComponent to render the gif scaled to frame, otherwise it'll look ugly...
         ImageIcon battleBackGround = new ImageIcon("BattleBackGround.gif");
         JLabel battleBG = new JLabel(battleBackGround) {
+            @Override
             protected void paintComponent(Graphics graphics) {
                 graphics.drawImage(battleBackGround.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
