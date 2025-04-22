@@ -61,8 +61,5 @@ public class Save {
      */
     public static void deleteSave() {
         File file = new File(saveFile);
-        if (file.exists()) {
-            file.delete();
-        }
     }
 }

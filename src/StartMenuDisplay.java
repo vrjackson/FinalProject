@@ -60,7 +60,7 @@ public class StartMenuDisplay extends JPanel {
 
             buttonPanel.add(loadGame);
             buttonPanel.add(newGame);
-        } else {//logic for when there isn't a previously saved file, to start a new game is the only option
+        } else { //logic for when there isn't a previously saved file, to start a new game is the only option
             JButton newGame = new JButton("New Game");
             newGame.addActionListener(e -> startNewGame(cardLayout, cards, frame));
             buttonPanel.add(newGame);

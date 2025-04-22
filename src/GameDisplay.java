@@ -11,10 +11,8 @@ import java.awt.event.*;
 
 public class GameDisplay extends JPanel{
 
-    private String saveFile;
     private String userName;
-    private int battlesWon;
-    private int battlesLost;
+    private int battlesWon, battlesLost;
     private Image backgroundImage, characterSprite;
     private ImageIcon saveIcon;
     private int xCoord = 400, yCoord = 300;
