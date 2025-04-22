@@ -56,7 +56,7 @@ public class GameDisplay extends JPanel{
         this.cardLayout = cardLayout;
         this.parent = parent;
 
-        backgroundImage = new ImageIcon("Project_Background_1.png").getImage();
+        backgroundImage = new ImageIcon("Project_Background_Horror.png").getImage();
         characterSprite = new ImageIcon("characterSprite.png").getImage();
         saveIcon = new ImageIcon("save.png");
 
