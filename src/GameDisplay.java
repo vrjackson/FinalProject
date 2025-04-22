@@ -92,9 +92,11 @@ public class GameDisplay extends JPanel{
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_A: //Left
+                        characterSprite = new ImageIcon("characterSprite.png").getImage();
                         xCoord -= moveSpeed;
                         break;
                     case KeyEvent.VK_D: //Right
+                        characterSprite = new ImageIcon("characterSpriteR.png").getImage();
                         xCoord += moveSpeed;
                         break;
                     case KeyEvent.VK_W: //Up
